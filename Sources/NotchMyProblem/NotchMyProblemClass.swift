@@ -12,7 +12,7 @@ import UIKit
 /// Extension to safely access the exclusion area (notch/Dynamic Island)
 extension UIScreen {
     /// Returns the frame of the Dynamic Island or notch.
-    var exclusionArea: CGRect? {
+    public var exclusionArea: CGRect? {
         // Early return for devices known not to have a notch/island
         // Check if the device is an iPhone and if it has a notch based on model
         let modelId = UIDevice.modelIdentifier
