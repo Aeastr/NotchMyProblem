@@ -69,11 +69,11 @@ public struct TopologyButtonsView<LeadingButton: View, TrailingButton: View>: Vi
         if let overrides = environmentOverrides {
             // Use environment-specific overrides if available
             let rect = NotchMyProblem.shared.adjustedExclusionRect(using: overrides)
-            return rect.isEmpty ? nil : rect
+            return rect
         } else {
             // Otherwise use the instance's configured overrides
             let rect = NotchMyProblem.shared.adjustedExclusionRect
-            return rect.isEmpty ? nil : rect
+            return rect
         }
     }
 }

@@ -191,7 +191,7 @@ public struct DeviceOverride: Equatable, Hashable, Sendable {
 /// Manages the detection and adjustment of the iPhone's top notch/Dynamic Island area
 @available(iOS 13.0, *)
 @MainActor
-public final class NotchMyProblem: Sendable {
+public final class NotchMyProblem: Sendable, ObservableObject {
     
     // MARK: - Logging
     
@@ -212,14 +212,14 @@ public final class NotchMyProblem: Sendable {
     
     /// The raw notch/Dynamic Island area retrieved via private API
     /// Uses a safer approach to access private APIs
-    public static let exclusionRect: CGRect = {
+    public static let exclusionRect: CGRect? = {
         if let rect = UIScreen.main.exclusionArea {
             logger.info("Found notch for \(UIDevice.modelIdentifier): \(rect)")
             return rect
         }
         
         logger.notice("No notch found, returning .zero")
-        return .zero
+        return nil
     }()
     
     // MARK: - Device-specific Adjustments
@@ -231,7 +231,7 @@ public final class NotchMyProblem: Sendable {
     ]
     
     /// Instance-specific overrides that only apply to this instance
-    public var overrides: [DeviceOverride] = []
+    @Published public var overrides: [DeviceOverride] = []
     
     // MARK: - Initialization
     
@@ -244,20 +244,17 @@ public final class NotchMyProblem: Sendable {
     
     /// Returns the notch/island area with device-specific adjustments applied
     /// Use this for proper UI positioning around the top cutout
-    public var adjustedExclusionRect: CGRect {
+    public var adjustedExclusionRect: CGRect? {
         adjustedExclusionRect(using: overrides)
     }
     
     /// Returns the notch/island area with the specified overrides applied
     /// - Parameter customOverrides: Custom overrides to use for this specific calculation
     /// - Returns: The adjusted exclusion rect
-    public func adjustedExclusionRect(using customOverrides: [DeviceOverride]? = nil) -> CGRect {
+    public func adjustedExclusionRect(using customOverrides: [DeviceOverride]? = nil) -> CGRect? {
         let baseRect = NotchMyProblem.exclusionRect
         
-        // No notch? No problem!
-        if baseRect.isEmpty {
-            return .zero
-        }
+        guard let baseRect else { return nil }
         
         // Determine which overrides to use (in order of precedence)
         let effectiveOverrides = customOverrides ?? overrides
@@ -348,12 +345,22 @@ public extension View {
     func notchOverrides(_ overrides: [DeviceOverride]) -> some View {
         modifier(NotchOverrideModifier(overrides: overrides))
     }
+    func notchOverrides(_ overrides: [DeviceOverride]?) -> some View {
+        modifier(NotchOverrideModifier(overrides: overrides.map { $0 } ?? []))
+    }
     
     /// Applies a single custom notch/island override to this view hierarchy
     /// - Parameter override: The device override to apply
     /// - Returns: A view with the specified notch override
     func notchOverride(_ override: DeviceOverride) -> some View {
         notchOverrides([override])
+    }
+    
+    /// Conditionally applies a custom notch/island override to this view hierarchy
+    /// - Parameter override: Optional device override to apply (nil means no override)
+    /// - Returns: A view with the specified notch override if provided
+    func notchOverride(_ override: DeviceOverride?) -> some View {
+        modifier(NotchOverrideModifier(overrides: override.map { [$0] } ?? []))
     }
 }
 
@@ -376,6 +383,7 @@ public extension EnvironmentValues {
 /// View modifier for applying notch overrides
 @available(iOS 13.0, *)
 private struct NotchOverrideModifier: ViewModifier {
+    @ObservedObject private var notchManager = NotchMyProblem.shared
     let overrides: [DeviceOverride]
     
     func body(content: Content) -> some View {
