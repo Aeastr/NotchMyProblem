@@ -5,19 +5,17 @@
   <i>Compatible with iOS 13.0 and later</i></p>
 </div>
 
----
-
 ## **Overview**
 
 NotchMyProblem is a lightweight Swift package that makes it easy to position buttons and other UI elements around the notch or Dynamic Island on modern iPhones. It automatically detects the device's top cutout and provides tools to create beautiful, adaptive layouts without the hassle of manual positioning.
 
 ## **Installation**
 
-### Swift Package Manager
-
 1. Go to File > Add Packages...
 2. Enter the repository URL: `https://github.com/Aeastr/NotchMyProblem`
 3. Click "Add Package"
+
+Alternatively, add it to your `Package.swift` dependencies:
 
 ---
 
@@ -202,14 +200,26 @@ To see logs, filter Console app output with subsystem: `com.notchmyproblem`
 
 ---
 
-## **License**
+## License
 
-NotchMyProblem is available under the MIT license. See the LICENSE file for more info.
+This project is released under the MIT License. See [LICENSE](LICENSE.md) for details.
+
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request. Before you begin, take a moment to review the [Contributing Guide](CONTRIBUTING.md) for details on issue reporting, coding standards, and the PR process.
+
+## Support
+
+If you like this project, please consider giving it a ⭐️
 
 ---
 
 # Acknowledgments
 
 - This package uses private API information in a safe, non-invasive way, however use at your own risk considering app store rules
-- Special thanks to the iOS developer community for sharing knowledge about device-specific quirks
 - Check out [TopNotch](https://github.com/samhenrigold/TopNotch) which helped inspire this solution and provided valuable insights into working with the notch/Dynamic Island
+
+---
+
+<p align="center">Built with 🍏📱🏝️ by Aether</p>
