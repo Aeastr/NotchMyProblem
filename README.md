@@ -123,10 +123,7 @@ CutoutAccessoryView(
 ### Available Modes
 
 - **`.auto`**  
-  Applies recommended defaults based on the actual cutout size:
-  - Cutout padding = `cutoutWidth / 8`  
-  - Content padding = `cutoutWidth / 4`  
-  - Vertical padding = `cutoutHeight × 0.05`  
+  Applies recommended defaults based on the actual cutout size
 
 - **`.none`**  
   No extra padding; your views will hug the safe-area edges exactly.

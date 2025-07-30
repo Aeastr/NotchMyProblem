@@ -100,7 +100,7 @@ public struct CutoutAccessoryView<LeadingContent: View, TrailingContent: View>: 
             let (cutoutPadding, contentPadding, verticalPadding): (CGFloat, CGFloat, CGFloat) = {
                 switch padding {
                 case .auto:
-                    return (exclusionWidth / 8, exclusionWidth / (4), exclusionHeight * 0.05)
+                    return (exclusionWidth / 6, exclusionWidth / (3), exclusionHeight * 0.1)
                 case .none:
                     return (0, 0, 0)
                 case .custom(let cutout, let content, let vertical):
@@ -163,12 +163,12 @@ public struct CutoutAccessoryView<LeadingContent: View, TrailingContent: View>: 
             leadingContent: {
                 Capsule()
                     .fill(.red)
-                    .overlay(Text("Leading").foregroundColor(.white))
+                    .overlay(Text("Leading").font(.footnote).foregroundColor(.white))
             },
             trailingContent: {
                 Capsule()
                     .fill(.red)
-                    .overlay(Text("Trailing").foregroundColor(.white))
+                    .overlay(Text("Trailing").font(.footnote).foregroundColor(.white))
             }
         )
     }
