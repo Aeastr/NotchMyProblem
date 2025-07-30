@@ -159,6 +159,7 @@ public struct CutoutAccessoryView<LeadingContent: View, TrailingContent: View>: 
             .navigationBarTitle("Default (.auto) Padding", displayMode: .inline)
         }
         CutoutAccessoryView(
+            padding: .auto,
             leadingContent: {
                 Capsule()
                     .fill(.red)
