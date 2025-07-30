@@ -11,11 +11,18 @@ NotchMyProblem is a lightweight Swift package that makes it easy to position but
 
 ## **Installation**
 
-1. Go to File > Add Packages...
-2. Enter the repository URL: `https://github.com/Aeastr/NotchMyProblem`
-3. Click "Add Package"
+1. In Xcode go to **File > Add Packages…**  
+2. Enter the repository URL: `https://github.com/Aeastr/NotchMyProblem`  
+3. Click **Add Package**
 
 Alternatively, add it to your `Package.swift` dependencies:
+
+```swift
+// Package.swift
+dependencies: [
+  .package(url: "https://github.com/Aeastr/NotchMyProblem.git", from: "2.0.0")
+]
+```
 
 ---
 
@@ -36,7 +43,7 @@ NotchMyProblem automatically detects the device type and adjusts the UI accordin
 
 ### CutoutAccessoryView
 
-The simplest way to use NotchMyProblem is with the included `CutoutAccessoryView`:
+The simplest way to use NotchMyProblem is with the included `CutoutAccessoryView`. Note the new `padding` parameter:
 
 ```swift
 import SwiftUI
@@ -46,16 +53,17 @@ struct MyView: View {
     var body: some View {
         ZStack {
             // Your main content here
-            
+
             // Buttons positioned around the notch/island
             CutoutAccessoryView(
+                padding: .auto, // default: horizontal = cutoutWidth/8 & /4, vertical = cutoutHeight*0.05
                 leadingContent: {
-                    Button(action: { print("Left button tapped") }) {
+                    Button(action: { print("Left tapped") }) {
                         Image(systemName: "gear")
                     }
                 },
                 trailingContent: {
-                    Button(action: { print("Right button tapped") }) {
+                    Button(action: { print("Right tapped") }) {
                         Text("Save")
                     }
                 }
@@ -65,103 +73,128 @@ struct MyView: View {
 }
 ```
 
-This will automatically:
-- Position buttons on either side of the notch/Dynamic Island on compatible devices
-- Fall back to standard left/right positioning on devices without a notch
-- Adjust the spacing based on the specific device model
+- **`.auto`**:  
+  - Cutout area → `cutoutWidth / 8` horizontal padding  
+  - Content area → `cutoutWidth / 4` horizontal padding  
+  - Vertical → `cutoutHeight * 0.05`  
+
+- **`.none`**: no extra padding  
+
+- **`.custom(cutout: , content: , vertical:)`**: supply your own closures
+
+---
+
+## **Why Padding?**
+
+Modern iPhones have notches, Dynamic Islands, and heavily rounded corners. If you place buttons or other UI elements too close to these cutouts you risk:
+
+- Elements appearing cramped or uncomfortably close to the cutout  
+- Parts of your UI being clipped by the curved screen edges  
+- Inconsistent spacing across different device models  
+
+By adding padding that *scales* with the actual cutout dimensions, NotchMyProblem ensures that your content:
+
+1. Always sits at a safe distance from the notch/island  
+2. Never collides with the device’s rounded corners  
+3. Maintains a consistent, polished look on every supported iPhone  
+
+---
+
+## **Padding Customization**
+
+You can control three kinds of padding:
+
+1. **Cutout padding** – extra space _around_ the notch/island itself  
+2. **Content padding** – extra space on either side of your HStack content  
+3. **Vertical padding** – extra space above and below your content  
+
+Use the `padding` parameter when initializing `CutoutAccessoryView`:
+
+```swift
+CutoutAccessoryView(
+  padding: .auto,  // default: cutoutW/8, contentW/4, verticalH*0.05
+  leadingContent: { /* … */ },
+  trailingContent:{ /* … */ }
+)
+```
+
+### Available Modes
+
+- **`.auto`**  
+  Applies recommended defaults based on the actual cutout size:
+  - Cutout padding = `cutoutWidth / 8`  
+  - Content padding = `cutoutWidth / 4`  
+  - Vertical padding = `cutoutHeight × 0.05`  
+
+- **`.none`**  
+  No extra padding; your views will hug the safe-area edges exactly.
+
+- **`.custom(cutout: , content: , vertical:)`**  
+  Supply closures to compute each padding dynamically:
+
+  ```swift
+  CutoutAccessoryView(
+    padding: .custom(
+      cutout:  { cutoutW  in cutoutW / 12 },    // 1/12 of cutout width
+      content: { cutoutW  in cutoutW / 6  },    // 1/6 of cutout width
+      vertical:{ cutoutH  in cutoutH * 0.2 }     // 20% of cutout height
+    ),
+    leadingContent: { /* … */ },
+    trailingContent:{ /* … */ }
+  )
+  ```
 
 ---
 
 ## **Advanced Usage**
 
-<div align="leading">
+<div align="left">
   <img width="200" height="200" src="assets/notchError.png" alt="iPhone with notch showing incorrect spacing">
   <h3><b>Custom Overrides for API Inaccuracies</b></h3>
   <p>Some devices report incorrect notch dimensions through the API. Overrides correct the reported values to match actual device dimensions, ensuring consistent UI across all devices.</p>
 </div>
 
-NotchMyProblem provides several ways to customize how the notch/island area is handled:
-
-#### 1. Global Overrides (App-wide)
+### 1. Global Overrides (App-wide)
 
 ```swift
-// In your App's initialization
+// In your App’s initialization (e.g. in @main or AppDelegate)
 NotchMyProblem.globalOverrides = [
     .series(prefix: "iPhone13", scale: 0.95, heightFactor: 1.0, radius: 27),
     DeviceOverride(modelIdentifier: "iPhone14,3", scale: 0.8, heightFactor: 0.7)
 ]
 ```
 
-#### 2. Instance Overrides
+### 2. Instance Overrides
 
 ```swift
-// For specific use cases
+// At runtime, for specific cases
 NotchMyProblem.shared.overrides = [
     DeviceOverride(modelIdentifier: "iPhone14,3", scale: 0.8, heightFactor: 0.7)
 ]
 ```
 
-#### 3. View-Specific Overrides (using SwiftUI modifiers)
+### 3. View-Specific Overrides (SwiftUI)
 
 ```swift
-CutoutAccessoryView(
-    leadingContent: { /* ... */ },
-    trailingContent: { /* ... */ }
-)
-.notchOverride(.series(prefix: "iPhone14", scale: 0.6, heightFactor: 0.6))
+CutoutAccessoryView(/* … */)
+  .notchOverride(.series(prefix: "iPhone14", scale: 0.6, heightFactor: 0.6))
 ```
 
-### Override Precedence
+#### Override Precedence
 
-Overrides are applied in the following order (highest priority first):
-1. View-specific overrides (via `.notchOverride()` modifier)
-2. Instance-specific exact model matches
-3. Instance-specific series matches
-4. Global exact model matches
-5. Global series matches
-
----
-
-## **Creating Device Overrides**
-
-### For Specific Device Models
-
-```swift
-// For a specific device model
-let override = DeviceOverride(
-    modelIdentifier: "iPhone14,3", // Exact model
-    scale: 0.8,                    // Width scale (0.8 = 80% of original width)
-    heightFactor: 0.7,             // Height scale (0.7 = 70% of original height)
-    radius: 24                     // Corner radius (for visualization)
-)
-```
-
-### For Device Series
-
-```swift
-// For all devices in a series
-let seriesOverride = DeviceOverride.series(
-    prefix: "iPhone14",  // All iPhone 14 models
-    scale: 0.75,         // Width scale
-    heightFactor: 0.75,  // Height scale
-    radius: 24           // Corner radius
-)
-```
+1. View-specific overrides  
+2. Instance-specific exact model  
+3. Instance-specific series prefix  
+4. Global exact model  
+5. Global series prefix  
 
 ---
 
 ## **Manual Access**
 
-If you need direct access to the notch/island dimensions:
-
 ```swift
-// Get the raw exclusion rect (unmodified)
-let rawRect = NotchMyProblem.exclusionRect
-
-// Get the adjusted rect with any applicable overrides
-let adjustedRect = NotchMyProblem.shared.adjustedExclusionRect
-
-// Get a custom-adjusted rect with specific overrides
+let rawRect    = NotchMyProblem.exclusionRect                   // raw API result
+let adjusted   = NotchMyProblem.shared.adjustedExclusionRect    // with global/instance overrides
 let customRect = NotchMyProblem.shared.adjustedExclusionRect(using: myOverrides)
 ```
 
@@ -169,57 +202,46 @@ let customRect = NotchMyProblem.shared.adjustedExclusionRect(using: myOverrides)
 
 ## **How It Works**
 
-NotchMyProblem uses a safe approach to access the device's notch/Dynamic Island information:
-
-1. It retrieves the exclusion area using Objective-C runtime features
-2. It safely checks for the existence of methods before calling them
-3. It applies device-specific adjustments based on the model identifier
-4. It provides fallbacks if the information cannot be retrieved
-
-The package is designed to be robust against API changes and includes comprehensive logging to help diagnose any issues.
+1. Uses Objective-C runtime to safely fetch the exclusion area  
+2. Falls back gracefully if the API is unavailable  
+3. Applies device-specific scale/height overrides  
+4. Provides SwiftUI modifiers and environment overrides for fine-grained control  
+5. Includes logging (iOS 14+ `Logger`, iOS 13 `os_log`)  
 
 ---
 
 ## **Compatibility**
 
-- Requires iOS 13.0 or later
-- Supports all notched iPhones (X, XS, XR, 11, 12, 13 series)
-- Supports Dynamic Island devices (iPhone 14 Pro and newer)
-- Safely falls back on devices without notches
+- iOS 13.0+  
+- All notched iPhones (X → 14, 16e…)  
+- Dynamic Island devices (14 Pro, newer)  
+- Fallback for devices without cutouts  
 
 ---
 
 ## **Logging**
 
-NotchMyProblem includes built-in logging that works across iOS versions:
-- Uses `Logger` on iOS 14+
-- Falls back to `os_log` on iOS 13
-- Provides helpful debug information
-
-To see logs, filter Console app output with subsystem: `com.notchmyproblem`
+Filter Console with subsystem `com.notchmyproblem` to see debug/info/error logs.
 
 ---
 
-## License
+## **License**
 
-This project is released under the MIT License. See [LICENSE](LICENSE.md) for details.
+MIT — see [LICENSE.md](LICENSE.md)
 
+## **Contributing**
 
-## Contributing
+Please review [CONTRIBUTING.md](CONTRIBUTING.md) before opening PRs.
 
-Contributions are welcome! Please feel free to submit a Pull Request. Before you begin, take a moment to review the [Contributing Guide](CONTRIBUTING.md) for details on issue reporting, coding standards, and the PR process.
+## **Support**
 
-## Support
-
-If you like this project, please consider giving it a ⭐️
+If you like it, please give a ⭐️
 
 ---
 
 # Acknowledgments
 
-- This package uses private API information in a safe, non-invasive way, however use at your own risk considering app store rules
-- Check out [TopNotch](https://github.com/samhenrigold/TopNotch) which helped inspire this solution and provided valuable insights into working with the notch/Dynamic Island
-
----
+- Inspired by [TopNotch](https://github.com/samhenrigold/TopNotch)  
+- Uses private APIs safely—use at your own risk
 
 <p align="center">Built with 🍏📱🏝️ by Aether</p>
