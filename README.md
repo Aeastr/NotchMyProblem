@@ -2,7 +2,18 @@
   <img width="300" height="300" src="/assets/icon.png" alt="Logo">
   <h1><b>NotchMyProblem</b></h1>
   <p>Swift package that handles the annoying task of positioning UI elements around the iPhone's notch and Dynamic Island<br>
-  <i>Compatible with iOS 13.0 and later</i></p>
+</div>
+
+<div align="center">
+  <a href="https://swift.org">
+    <img src="https://img.shields.io/badge/Swift-6.0-orange.svg" alt="Swift Version">
+  </a>
+  <a href="https://www.apple.com/ios/">
+    <img src="https://img.shields.io/badge/iOS-13%2B-blue.svg" alt="iOS">
+  </a>
+  <a href="LICENSE">
+    <img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License: MIT">
+  </a>
 </div>
 
 ## **Overview**
