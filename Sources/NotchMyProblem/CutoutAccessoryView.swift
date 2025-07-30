@@ -1,5 +1,5 @@
 //
-//  TopologyButtonsView.swift
+//  CutoutAccessoryView.swift
 //  NotchMyProblem
 //
 //  Created by Aether on 03/03/2025.
@@ -7,29 +7,36 @@
 
 import SwiftUI
 
-/// A view that positions buttons around the physical topology of the device's top area,
+/// A view that positions content around the physical topology of the device's top area,
 /// adapting to notches, Dynamic Islands, and other screen cutouts automatically.
+///
+/// You can provide any views for the leading and trailing sides.
+///   - leadingContent: The view to display on the left side
+///   - trailingContent: The view to display on the right side
 @available(iOS 13.0, *)
-public struct TopologyButtonsView<LeadingButton: View, TrailingButton: View>: View {
-    // The button that appears on the left/leading side
-    let leadingButton: LeadingButton
-    
-    // The button that appears on the right/trailing side
-    let trailingButton: TrailingButton
-    
+public struct CutoutAccessoryView<LeadingContent: View, TrailingContent: View>: View {
     // Environment access to any custom overrides
     @Environment(\.notchOverrides) private var environmentOverrides
-    
-    /// Creates a new TopologyButtonsView with custom leading and trailing buttons
+
+    // The view that appears on the left/leading side
+    let leadingContent: LeadingContent
+
+    // The view that appears on the right/trailing side
+    let trailingContent: TrailingContent
+
+    // Access class
+    let notchMyProblem = NotchMyProblem.self
+
+    /// Creates a new CutoutAccessoryView with custom leading and trailing content.
     /// - Parameters:
-    ///   - leadingButton: The button to display on the left side
-    ///   - trailingButton: The button to display on the right side
+    ///   - leadingContent: The view to display on the left side.
+    ///   - trailingContent: The view to display on the right side.
     public init(
-        @ViewBuilder leadingButton: () -> LeadingButton,
-        @ViewBuilder trailingButton: () -> TrailingButton
+        @ViewBuilder leadingContent: () -> LeadingContent,
+        @ViewBuilder trailingContent: () -> TrailingContent
     ) {
-        self.leadingButton = leadingButton()
-        self.trailingButton = trailingButton()
+        self.leadingContent = leadingContent()
+        self.trailingContent = trailingContent()
     }
     
     public var body: some View {
@@ -39,11 +46,8 @@ public struct TopologyButtonsView<LeadingButton: View, TrailingButton: View>: Vi
             let hasTopCutout = statusBarHeight > 40
             
             HStack(spacing: 0) {
-                // Leading button with appropriate alignment
-                leadingButton
+                leadingContent
                     .frame(maxWidth: .infinity, alignment: hasTopCutout ? .center : .leading)
-                    
-                    .padding(7)
                 
                 // Space for the device's top cutout if present
                 if hasTopCutout, let exclusionWidth = getAdjustedExclusionRect()?.width, exclusionWidth > 0 {
@@ -51,16 +55,14 @@ public struct TopologyButtonsView<LeadingButton: View, TrailingButton: View>: Vi
                         .frame(width: exclusionWidth)
                 }
                 
-                // Trailing button with appropriate alignment
-                trailingButton
+                trailingContent
                     .frame(maxWidth: .infinity, alignment: hasTopCutout ? .center : .trailing)
-                    .padding(7)
+//                    .padding(7)
             }
             // Adjust height based on device topology
-            .frame(height: hasTopCutout ? statusBarHeight + 4 : 40)
-            .padding(.top, hasTopCutout ? 0 : 5)
+            .frame(height: hasTopCutout ? notchMyProblem.exclusionRect?.height ?? statusBarHeight : 40)
+            .padding(.top, notchMyProblem.exclusionRect?.minY ?? (hasTopCutout ? 0 : 5))
             .edgesIgnoringSafeArea(.all)
-            .padding(.horizontal, 15)
         }
     }
     
@@ -68,34 +70,24 @@ public struct TopologyButtonsView<LeadingButton: View, TrailingButton: View>: Vi
     private func getAdjustedExclusionRect() -> CGRect? {
         if let overrides = environmentOverrides {
             // Use environment-specific overrides if available
-            let rect = NotchMyProblem.shared.adjustedExclusionRect(using: overrides)
+            let rect = notchMyProblem.shared.adjustedExclusionRect(using: overrides)
             return rect
         } else {
             // Otherwise use the instance's configured overrides
-            let rect = NotchMyProblem.shared.adjustedExclusionRect
+            let rect = notchMyProblem.shared.adjustedExclusionRect
             return rect
         }
     }
 }
 
 #Preview {
-        // Default TopologyButtonsView
-        TopologyButtonsView(
-            leadingButton: {
-                Button(action: {
-                    print("Default: Back tapped")
-                }) {
-                    Image(systemName: "chevron.left")
-                        .font(.headline)
-                }
+        // Default CutoutAccessoryView
+        CutoutAccessoryView(
+            leadingContent: {
+                Color.red
             },
-            trailingButton: {
-                Button(action: {
-                    print("Default: Save tapped")
-                }) {
-                    Text("Save")
-                        .font(.headline)
-                }
+            trailingContent: {
+                Color.red
             }
         )
         .previewDisplayName("Default")
@@ -105,9 +97,9 @@ public struct TopologyButtonsView<LeadingButton: View, TrailingButton: View>: Vi
 #Preview {
     
 
-    // TopologyButtonsView with view-specific override
-    TopologyButtonsView(
-        leadingButton: {
+    // CutoutAccessoryView with view-specific override
+    CutoutAccessoryView(
+        leadingContent: {
             Button(action: {
                 print("Override: Back tapped")
             }) {
@@ -115,7 +107,7 @@ public struct TopologyButtonsView<LeadingButton: View, TrailingButton: View>: Vi
                     .font(.headline)
             }
         },
-        trailingButton: {
+        trailingContent: {
             Button(action: {
                 print("Override: Save tapped")
             }) {
@@ -130,8 +122,8 @@ public struct TopologyButtonsView<LeadingButton: View, TrailingButton: View>: Vi
 
 #Preview{
     // Another variant with different styling
-    TopologyButtonsView(
-        leadingButton: {
+    CutoutAccessoryView(
+        leadingContent: {
             Button(action: {
                 print("Styled: Cancel tapped")
             }) {
@@ -140,7 +132,7 @@ public struct TopologyButtonsView<LeadingButton: View, TrailingButton: View>: Vi
                     .foregroundColor(.red)
             }
         },
-        trailingButton: {
+        trailingContent: {
             Button(action: {
                 print("Styled: Confirm tapped")
             }) {

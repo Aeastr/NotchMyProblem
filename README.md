@@ -34,9 +34,9 @@ NotchMyProblem automatically detects the device type and adjusts the UI accordin
 
 ## **Basic Usage**
 
-### TopologyButtonsView
+### CutoutAccessoryView
 
-The simplest way to use NotchMyProblem is with the included `TopologyButtonsView`:
+The simplest way to use NotchMyProblem is with the included `CutoutAccessoryView`:
 
 ```swift
 import SwiftUI
@@ -48,13 +48,13 @@ struct MyView: View {
             // Your main content here
             
             // Buttons positioned around the notch/island
-            TopologyButtonsView(
-                leadingButton: {
+            CutoutAccessoryView(
+                leadingContent: {
                     Button(action: { print("Left button tapped") }) {
                         Image(systemName: "gear")
                     }
                 },
-                trailingButton: {
+                trailingContent: {
                     Button(action: { print("Right button tapped") }) {
                         Text("Save")
                     }
@@ -104,9 +104,9 @@ NotchMyProblem.shared.overrides = [
 #### 3. View-Specific Overrides (using SwiftUI modifiers)
 
 ```swift
-TopologyButtonsView(
-    leadingButton: { /* ... */ },
-    trailingButton: { /* ... */ }
+CutoutAccessoryView(
+    leadingContent: { /* ... */ },
+    trailingContent: { /* ... */ }
 )
 .notchOverride(.series(prefix: "iPhone14", scale: 0.6, heightFactor: 0.6))
 ```
