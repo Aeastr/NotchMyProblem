@@ -43,7 +43,7 @@ NotchMyProblem automatically detects the device type and adjusts the UI accordin
 
 ### CutoutAccessoryView
 
-The simplest way to use NotchMyProblem is with the included `CutoutAccessoryView`. Note the new `padding` parameter:
+The simplest way to use NotchMyProblem is with the included `CutoutAccessoryView`.
 
 ```swift
 import SwiftUI
@@ -56,7 +56,7 @@ struct MyView: View {
 
             // Buttons positioned around the notch/island
             CutoutAccessoryView(
-                padding: .auto, // default: horizontal = cutoutWidth/8 & /4, vertical = cutoutHeight*0.05
+                padding: .auto,
                 leadingContent: {
                     Button(action: { print("Left tapped") }) {
                         Image(systemName: "gear")
@@ -72,15 +72,6 @@ struct MyView: View {
     }
 }
 ```
-
-- **`.auto`**:  
-  - Cutout area → `cutoutWidth / 8` horizontal padding  
-  - Content area → `cutoutWidth / 4` horizontal padding  
-  - Vertical → `cutoutHeight * 0.05`  
-
-- **`.none`**: no extra padding  
-
-- **`.custom(cutout: , content: , vertical:)`**: supply your own closures
 
 ---
 
@@ -243,5 +234,14 @@ If you like it, please give a ⭐️
 
 - Inspired by [TopNotch](https://github.com/samhenrigold/TopNotch)  
 - Uses private APIs safely—use at your own risk
+
+---
+
+## Where to find me:  
+- here, obviously.  
+- [Twitter](https://x.com/AetherAurelia)  
+- [Threads](https://www.threads.net/@aetheraurelia)  
+- [Bluesky](https://bsky.app/profile/aethers.world)  
+- [LinkedIn](https://www.linkedin.com/in/willjones24)
 
 <p align="center">Built with 🍏📱🏝️ by Aether</p>
