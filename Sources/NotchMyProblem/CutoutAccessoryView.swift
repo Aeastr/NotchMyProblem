@@ -93,14 +93,14 @@ public struct CutoutAccessoryView<LeadingContent: View, TrailingContent: View>: 
             let statusBarHeight = geometry.safeAreaInsets.top
             let hasTopCutout = statusBarHeight > 40
             
-            let exclusionWidth = getAdjustedExclusionRect()?.width ?? 0
+            let exclusionWidth = getAdjustedExclusionRect()?.width ?? geometry.size.width * 0.3
             
             let exclusionHeight = notchMyProblem.exclusionRect?.height ?? 0
 
             let (cutoutPadding, contentPadding, verticalPadding): (CGFloat, CGFloat, CGFloat) = {
                 switch padding {
                 case .auto:
-                    return (exclusionWidth / 8, exclusionWidth / 4, exclusionHeight * 0.05)
+                    return (exclusionWidth / 8, exclusionWidth / (4), exclusionHeight * 0.05)
                 case .none:
                     return (0, 0, 0)
                 case .custom(let cutout, let content, let vertical):
@@ -114,7 +114,7 @@ public struct CutoutAccessoryView<LeadingContent: View, TrailingContent: View>: 
                     .frame(maxWidth: .infinity, alignment: hasTopCutout ? .center : .leading)
                 
                 // Space for the device's top cutout if present
-                if hasTopCutout, exclusionWidth > 0 {
+                if exclusionWidth > 0 {
                     Color.clear
                         .frame(width: exclusionWidth)
                         .padding(.horizontal, cutoutPadding)
@@ -127,7 +127,7 @@ public struct CutoutAccessoryView<LeadingContent: View, TrailingContent: View>: 
             .padding(.vertical, verticalPadding)
             .frame(height: hasTopCutout ? notchMyProblem.exclusionRect?.height ?? statusBarHeight : 40)
             .padding(.top, notchMyProblem.exclusionRect?.minY ?? (hasTopCutout ? 0 : 5))
-            .padding(.horizontal, contentPadding)
+            .padding(.horizontal, hasTopCutout ? contentPadding : 5)
             .edgesIgnoringSafeArea(.all)
         }
     }
