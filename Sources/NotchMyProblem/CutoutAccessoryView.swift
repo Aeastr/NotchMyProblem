@@ -93,7 +93,7 @@ public struct CutoutAccessoryView<LeadingContent: View, TrailingContent: View>: 
             let statusBarHeight = geometry.safeAreaInsets.top
             let hasTopCutout = statusBarHeight > 40
             
-            let exclusionWidth = getAdjustedExclusionRect()?.width ?? geometry.size.width * 0.3
+            let exclusionWidth = getAdjustedExclusionRect()?.width ?? geometry.size.width * 0.4
             
             let exclusionHeight = notchMyProblem.exclusionRect?.height ?? 0
 
@@ -125,7 +125,7 @@ public struct CutoutAccessoryView<LeadingContent: View, TrailingContent: View>: 
                     .frame(maxWidth: .infinity, alignment: hasTopCutout ? .center : .trailing)
             }
             .padding(.vertical, verticalPadding)
-            .frame(height: hasTopCutout ? notchMyProblem.exclusionRect?.height ?? statusBarHeight : 40)
+            .frame(height: hasTopCutout ? notchMyProblem.exclusionRect?.height ?? statusBarHeight : 30)
             .padding(.top, notchMyProblem.exclusionRect?.minY ?? (hasTopCutout ? 0 : 5))
             .padding(.horizontal, hasTopCutout ? contentPadding : 5)
             .edgesIgnoringSafeArea(.all)
