@@ -74,14 +74,14 @@ struct ContentView: View {
             .padding()
             
             // Buttons positioned around the notch/island
-            TopologyButtonsView(
-                leadingButton: {
+            CutoutAccessoryView(
+                leadingContent: {
                     Button(action: { }) {
                         Image(systemName: "arrow.left")
                             .modifier(ButtonStyleModifier())
                     }
                 },
-                trailingButton: {
+                trailingContent: {
                     Button(action: { }) {
                         Text("Done")
                             .modifier(ButtonStyleModifier())
