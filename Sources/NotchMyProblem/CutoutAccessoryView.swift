@@ -182,14 +182,20 @@ public struct CutoutAccessoryView<LeadingContent: View, TrailingContent: View>: 
         CutoutAccessoryView(
             padding: .auto,
             leadingContent: {
-                Capsule()
-                    .fill(.red)
-                    .overlay(Text("Leading").font(.footnote).foregroundColor(.white))
+                Button{
+                    
+                } label: {
+                    Text("Leading")
+                        .notchMyProblem_Example_Button()
+                }
             },
             trailingContent: {
-                Capsule()
-                    .fill(.red)
-                    .overlay(Text("Trailing").font(.footnote).foregroundColor(.white))
+                Button{
+                    
+                } label: {
+                    Text("Trailing")
+                        .notchMyProblem_Example_Button(highlighted: true)
+                }
             }
         )
     }
@@ -210,14 +216,20 @@ public struct CutoutAccessoryView<LeadingContent: View, TrailingContent: View>: 
         CutoutAccessoryView(
             padding: .none,
             leadingContent: {
-                Capsule()
-                    .fill(.red)
-                    .overlay(Text("Leading").foregroundColor(.white))
+                Button{
+                    
+                } label: {
+                    Text("Leading")
+                        .notchMyProblem_Example_Button()
+                }
             },
             trailingContent: {
-                Capsule()
-                    .fill(.red)
-                    .overlay(Text("Trailing").foregroundColor(.white))
+                Button{
+                    
+                } label: {
+                    Text("Trailing")
+                        .notchMyProblem_Example_Button(highlighted: true)
+                }
             }
         )
     }
@@ -251,14 +263,20 @@ public struct CutoutAccessoryView<LeadingContent: View, TrailingContent: View>: 
                 vertical: { $0 * 0.2 }
             ),
             leadingContent: {
-                Capsule()
-                    .fill(.red)
-                    .overlay(Text("Leading").foregroundColor(.white))
+                Button{
+                    
+                } label: {
+                    Text("Leading")
+                        .notchMyProblem_Example_Button()
+                }
             },
             trailingContent: {
-                Capsule()
-                    .fill(.red)
-                    .overlay(Text("Trailing").foregroundColor(.white))
+                Button{
+                    
+                } label: {
+                    Text("Trailing")
+                        .notchMyProblem_Example_Button(highlighted: true)
+                }
             }
         )
     }
@@ -286,16 +304,35 @@ public struct CutoutAccessoryView<LeadingContent: View, TrailingContent: View>: 
         }
         CutoutAccessoryView(
             leadingContent: {
-                Capsule()
-                    .fill(.red)
-                    .overlay(Text("Leading").foregroundColor(.white))
+                Button{
+                    
+                } label: {
+                    Text("Leading")
+                        .notchMyProblem_Example_Button()
+                }
             },
             trailingContent: {
-                Capsule()
-                    .fill(.red)
-                    .overlay(Text("Trailing").foregroundColor(.white))
+                Button{
+                    
+                } label: {
+                    Text("Trailing")
+                        .notchMyProblem_Example_Button(highlighted: true)
+                }
             }
         )
         .notchOverride(.series(prefix: "iPhone14", scale: 0.6, heightFactor: 0.6))
+    }
+}
+
+extension View{
+    // pls ignore shody code i have to make this display on iOS 14 too 💔
+    func notchMyProblem_Example_Button(highlighted: Bool = false) -> some View{
+        self
+            .fixedSize(horizontal: true, vertical: false)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .font(.footnote.weight(.semibold))
+            .foregroundColor(highlighted ? Color.white : Color.primary)
+            .background(highlighted ? Color(red: 5/255, green: 160/255, blue: 190/255) :  Color.gray.opacity(0.3))
+            .clipShape(Capsule())
     }
 }
