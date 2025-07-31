@@ -86,9 +86,9 @@ struct MyView: View {
 
 ---
 
-## **Why Padding?**
+## **Padding**
 
-Modern iPhones have notches, Dynamic Islands, and heavily rounded corners. If you place buttons or other UI elements too close to these cutouts you risk:
+Modern iPhones have Notches, Dynamic Islands, and heavily rounded corners. If you place buttons or other UI elements too close to these cutouts you risk:
 
 - Elements appearing cramped or uncomfortably close to the cutout  
 - Parts of your UI being clipped by the curved screen edges  
@@ -100,13 +100,9 @@ By adding padding that *scales* with the actual cutout dimensions, NotchMyProble
 2. Never collides with the device’s rounded corners  
 3. Maintains a consistent, polished look on every supported iPhone  
 
----
+### Controlling Padding
 
-## **Padding Customization**
-
-You can control three kinds of padding:
-
-1. **Cutout padding** – extra space _around_ the notch/island itself  
+1. **Cutout padding** – extra space _around_ the display cut out
 2. **Content padding** – extra space on either side of your HStack content  
 3. **Vertical padding** – extra space above and below your content  
 
@@ -114,7 +110,7 @@ Use the `padding` parameter when initializing `CutoutAccessoryView`:
 
 ```swift
 CutoutAccessoryView(
-  padding: .auto,  // default: cutoutW/8, contentW/4, verticalH*0.05
+  padding: .auto, 
   leadingContent: { /* … */ },
   trailingContent:{ /* … */ }
 )
@@ -127,6 +123,7 @@ CutoutAccessoryView(
   - Dynamic Island (narrow): Gets generous padding for breathing room
   - iPhone notch (wide): Gets minimal padding since the cutout already creates natural spacing
   - Uses inverse relationship: `padding = base - (cutoutWidth × slope)` with min/max bounds
+
 
 - **`.none`**  
   No extra padding; your views will hug the safe-area edges exactly.
