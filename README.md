@@ -1,7 +1,7 @@
 <div align="center">
-  <img width="300" height="300" src="/assets/icon.png" alt="Logo">
+  <img width="270" height="270" src="/assets/icon.png" alt="Logo">
   <h1><b>NotchMyProblem</b></h1>
-  <p>Swift package that handles the annoying task of positioning UI elements around the iPhone's notch and Dynamic Island<br>
+  <p>Swift package that handles the annoying task of positioning UI elements around the iPhone's notch or Dynamic Island, (aka the device ears!)<br>
 </div>
 
 <div align="center">
@@ -43,7 +43,7 @@ dependencies: [
 |:-----------------------------:|:-----------------------------:|:-----------------------------:|
 | **Notch Devices**             | **Dynamic Island Devices**    | **Standard Devices**          |
 | Automatically positions buttons around the notch | Adapts to the Dynamic Island's dimensions | Falls back to standard positioning |
-| Works with iPhone X → iPhone 14 Series, iPhone 16e | Supports iPhone 14 Pro and newer | Compatible with older iPhones |
+| Works with iPhone X → iPhone 14 Series, iPhone 16e | Supports iPhone 14 Pro and newer | Compatible with older iPhones and all iPads |
 | Applies device-specific adjustments | Uses precise measurements | Maintains consistent UI across all devices |
 
 NotchMyProblem automatically detects the device type and adjusts the UI accordingly, ensuring your buttons are perfectly positioned regardless of the device model.
@@ -86,9 +86,9 @@ struct MyView: View {
 
 ---
 
-## **Why Padding?**
+## **Padding**
 
-Modern iPhones have notches, Dynamic Islands, and heavily rounded corners. If you place buttons or other UI elements too close to these cutouts you risk:
+Modern iPhones have Notches, Dynamic Islands, and heavily rounded corners. If you place buttons or other UI elements too close to these cutouts you risk:
 
 - Elements appearing cramped or uncomfortably close to the cutout  
 - Parts of your UI being clipped by the curved screen edges  
@@ -100,13 +100,9 @@ By adding padding that *scales* with the actual cutout dimensions, NotchMyProble
 2. Never collides with the device’s rounded corners  
 3. Maintains a consistent, polished look on every supported iPhone  
 
----
+### Controlling Padding
 
-## **Padding Customization**
-
-You can control three kinds of padding:
-
-1. **Cutout padding** – extra space _around_ the notch/island itself  
+1. **Cutout padding** – extra space _around_ the display cut out
 2. **Content padding** – extra space on either side of your HStack content  
 3. **Vertical padding** – extra space above and below your content  
 
@@ -114,7 +110,7 @@ Use the `padding` parameter when initializing `CutoutAccessoryView`:
 
 ```swift
 CutoutAccessoryView(
-  padding: .auto,  // default: cutoutW/8, contentW/4, verticalH*0.05
+  padding: .auto, 
   leadingContent: { /* … */ },
   trailingContent:{ /* … */ }
 )
@@ -123,7 +119,10 @@ CutoutAccessoryView(
 ### Available Modes
 
 - **`.auto`**  
-  Applies recommended defaults based on the actual cutout size
+  Uses intelligent curves that adapt to cutout size. **Smaller cutouts get more padding, larger cutouts get less padding** - the opposite of simple percentage-based approaches. This ensures optimal spacing across all device types:
+  - Dynamic Island (narrow): Gets generous padding for breathing room
+  - iPhone notch (wide): Gets minimal padding since the cutout already creates natural spacing
+  - Uses inverse relationship: `padding = base - (cutoutWidth × slope)` with min/max bounds
 
 - **`.none`**  
   No extra padding; your views will hug the safe-area edges exactly.
@@ -145,13 +144,13 @@ CutoutAccessoryView(
 
 ---
 
-## **Advanced Usage**
+## **Overrides**
 
-<div align="left">
-  <img width="200" height="200" src="assets/notchError.png" alt="iPhone with notch showing incorrect spacing">
-  <h3><b>Custom Overrides for API Inaccuracies</b></h3>
-  <p>Some devices report incorrect notch dimensions through the API. Overrides correct the reported values to match actual device dimensions, ensuring consistent UI across all devices.</p>
-</div>
+![iPhone 16e close up of notch area showing 2 buttons, cancel and export pushing up agasint the dispaly border, misaligned with the notch space](assets/notchError.png)
+
+Some devices report incorrect notch dimensions through the API. Overrides correct the reported values to match actual device dimensions, ensuring consistent UI across all devices.
+
+NotchMyProblem has overrides by **default** already, devices like the iPhone 16e require this to correctly proportion elements, you do not need to figure these out for yourself, but you can create your own adjustments, or configure other devices 
 
 ### 1. Global Overrides (App-wide)
 
@@ -199,48 +198,15 @@ let customRect = NotchMyProblem.shared.adjustedExclusionRect(using: myOverrides)
 
 ---
 
-## **How It Works**
-
-1. Uses Objective-C runtime to safely fetch the exclusion area  
-2. Falls back gracefully if the API is unavailable  
-3. Applies device-specific scale/height overrides  
-4. Provides SwiftUI modifiers and environment overrides for fine-grained control  
-5. Includes logging (iOS 14+ `Logger`, iOS 13 `os_log`)  
-
----
-
-## **Compatibility**
-
-- iOS 13.0+  
-- All notched iPhones (X → 14, 16e…)  
-- Dynamic Island devices (14 Pro, newer)  
-- Fallback for devices without cutouts  
-
----
-
 ## **Logging**
 
 Filter Console with subsystem `com.notchmyproblem` to see debug/info/error logs.
 
 ---
 
-## **License**
-
-MIT — see [LICENSE.md](LICENSE.md)
-
-## **Contributing**
-
-Please review [CONTRIBUTING.md](CONTRIBUTING.md) before opening PRs.
-
-## **Support**
-
-If you like it, please give a ⭐️
-
----
-
 # Acknowledgments
 
-- Inspired by [TopNotch](https://github.com/samhenrigold/TopNotch)  
+- [TopNotch](https://github.com/samhenrigold/TopNotch)  
 - Uses private APIs safely—use at your own risk
 
 ---

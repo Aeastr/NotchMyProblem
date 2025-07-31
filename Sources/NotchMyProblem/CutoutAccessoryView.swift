@@ -46,6 +46,9 @@ public enum CutoutAccessoryPadding {
     )
 }
 
+
+
+
 /// A view that positions content around the physical topology of the device's top area,
 /// adapting to notches, Dynamic Islands, and other screen cutouts automatically.
 ///
@@ -89,18 +92,22 @@ public struct CutoutAccessoryView<LeadingContent: View, TrailingContent: View>: 
     
     public var body: some View {
         GeometryReader { geometry in
-            // Detect device topology based on safe area height
+            // MARK: - Device Detection
             let statusBarHeight = geometry.safeAreaInsets.top
             let hasTopCutout = statusBarHeight > 40
             
-            let exclusionWidth = getAdjustedExclusionRect()?.width ?? geometry.size.width * 0.4
-            
+            // MARK: - Cutout Dimensions
+            let exclusionWidth = getAdjustedExclusionRect()?.width ?? (geometry.size.width - 180) // Fallback for non-cutout devices (iPad, iPhone SE)
             let exclusionHeight = notchMyProblem.exclusionRect?.height ?? 0
-
+            
+            // MARK: - Padding Calculations
             let (cutoutPadding, contentPadding, verticalPadding): (CGFloat, CGFloat, CGFloat) = {
                 switch padding {
                 case .auto:
-                    return (exclusionWidth / 6, exclusionWidth / (3), exclusionHeight * 0.1)
+                    let cutoutPadding = max(5, min(20, 45 - (exclusionWidth * 0.18)))
+                    let contentPadding = max(2, min(40, 85 - (exclusionWidth * 0.35)))
+                    let verticalPadding = exclusionHeight * 0.1
+                    return (cutoutPadding, contentPadding, verticalPadding)
                 case .none:
                     return (0, 0, 0)
                 case .custom(let cutout, let content, let vertical):
@@ -108,25 +115,39 @@ public struct CutoutAccessoryView<LeadingContent: View, TrailingContent: View>: 
                 }
             }()
             
+            // MARK: - Top Positioning
+            let topPadding: CGFloat = {
+                let minY = notchMyProblem.exclusionRect?.minY ?? (hasTopCutout ? 0 : 5)
+                
+                if minY == 0 {
+                    // Notched device - cutout touches bezel, need spacing
+                    return hasTopCutout ? (exclusionHeight / 3) : 5
+                } else {
+                    // Island device - cutout floats, align to its Y position
+                    return minY
+                }
+            }()
+
+            // MARK: - Layout
             HStack(spacing: 0) {
-                // Leading content, aligned appropriately
+                // Leading content
                 leadingContent
                     .frame(maxWidth: .infinity, alignment: hasTopCutout ? .center : .leading)
                 
-                // Space for the device's top cutout if present
+                // Space for the device's top cutout
                 if exclusionWidth > 0 {
                     Color.clear
                         .frame(width: exclusionWidth)
                         .padding(.horizontal, cutoutPadding)
                 }
                 
-                // Trailing content, aligned appropriately
+                // Trailing content
                 trailingContent
                     .frame(maxWidth: .infinity, alignment: hasTopCutout ? .center : .trailing)
             }
             .padding(.vertical, verticalPadding)
             .frame(height: hasTopCutout ? notchMyProblem.exclusionRect?.height ?? statusBarHeight : 30)
-            .padding(.top, notchMyProblem.exclusionRect?.minY ?? (hasTopCutout ? 0 : 5))
+            .padding(.top, topPadding)
             .padding(.horizontal, hasTopCutout ? contentPadding : 5)
             .edgesIgnoringSafeArea(.all)
         }
@@ -151,7 +172,7 @@ public struct CutoutAccessoryView<LeadingContent: View, TrailingContent: View>: 
         NavigationView {
             ScrollView {
                 VStack(alignment: .leading) {
-                    Text("Recommended for most cases. Adds horizontal padding to both the cutout area and the overall content, and vertical padding based on the cutout height. Ensures content doesn't touch the notch, device corners, or crowd the top edge.")
+                    Text("Recommended for most cases. Uses intelligent adaptive padding that gives smaller cutouts (Dynamic Island) more breathing room and larger cutouts (notches) less padding. Automatically handles positioning differences between notched and island devices.")
                         .font(.subheadline)
                         .padding(.horizontal)
                 }
@@ -161,14 +182,20 @@ public struct CutoutAccessoryView<LeadingContent: View, TrailingContent: View>: 
         CutoutAccessoryView(
             padding: .auto,
             leadingContent: {
-                Capsule()
-                    .fill(.red)
-                    .overlay(Text("Leading").font(.footnote).foregroundColor(.white))
+                Button{
+                    
+                } label: {
+                    Text("Leading")
+                        .notchMyProblem_Example_Button()
+                }
             },
             trailingContent: {
-                Capsule()
-                    .fill(.red)
-                    .overlay(Text("Trailing").font(.footnote).foregroundColor(.white))
+                Button{
+                    
+                } label: {
+                    Text("Trailing")
+                        .notchMyProblem_Example_Button(highlighted: true)
+                }
             }
         )
     }
@@ -189,14 +216,20 @@ public struct CutoutAccessoryView<LeadingContent: View, TrailingContent: View>: 
         CutoutAccessoryView(
             padding: .none,
             leadingContent: {
-                Capsule()
-                    .fill(.red)
-                    .overlay(Text("Leading").foregroundColor(.white))
+                Button{
+                    
+                } label: {
+                    Text("Leading")
+                        .notchMyProblem_Example_Button()
+                }
             },
             trailingContent: {
-                Capsule()
-                    .fill(.red)
-                    .overlay(Text("Trailing").foregroundColor(.white))
+                Button{
+                    
+                } label: {
+                    Text("Trailing")
+                        .notchMyProblem_Example_Button(highlighted: true)
+                }
             }
         )
     }
@@ -230,14 +263,20 @@ public struct CutoutAccessoryView<LeadingContent: View, TrailingContent: View>: 
                 vertical: { $0 * 0.2 }
             ),
             leadingContent: {
-                Capsule()
-                    .fill(.red)
-                    .overlay(Text("Leading").foregroundColor(.white))
+                Button{
+                    
+                } label: {
+                    Text("Leading")
+                        .notchMyProblem_Example_Button()
+                }
             },
             trailingContent: {
-                Capsule()
-                    .fill(.red)
-                    .overlay(Text("Trailing").foregroundColor(.white))
+                Button{
+                    
+                } label: {
+                    Text("Trailing")
+                        .notchMyProblem_Example_Button(highlighted: true)
+                }
             }
         )
     }
@@ -265,16 +304,36 @@ public struct CutoutAccessoryView<LeadingContent: View, TrailingContent: View>: 
         }
         CutoutAccessoryView(
             leadingContent: {
-                Capsule()
-                    .fill(.red)
-                    .overlay(Text("Leading").foregroundColor(.white))
+                Button{
+                    
+                } label: {
+                    Text("Leading")
+                        .notchMyProblem_Example_Button()
+                }
             },
             trailingContent: {
-                Capsule()
-                    .fill(.red)
-                    .overlay(Text("Trailing").foregroundColor(.white))
+                Button{
+                    
+                } label: {
+                    Text("Trailing")
+                        .notchMyProblem_Example_Button(highlighted: true)
+                }
             }
         )
         .notchOverride(.series(prefix: "iPhone14", scale: 0.6, heightFactor: 0.6))
+    }
+}
+
+extension View{
+    // pls ignore shody code i have to make this display on iOS 13 too 💔
+    // i will make better examples later (like ones seen online)
+    func notchMyProblem_Example_Button(highlighted: Bool = false) -> some View{
+        self
+            .fixedSize(horizontal: true, vertical: false)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .font(.footnote.weight(.semibold))
+            .foregroundColor(highlighted ? Color.white : Color.primary)
+            .background(highlighted ? Color(red: 5/255, green: 160/255, blue: 190/255) :  Color.gray.opacity(0.3))
+            .clipShape(Capsule())
     }
 }
