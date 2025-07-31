@@ -124,7 +124,6 @@ CutoutAccessoryView(
   - iPhone notch (wide): Gets minimal padding since the cutout already creates natural spacing
   - Uses inverse relationship: `padding = base - (cutoutWidth × slope)` with min/max bounds
 
-
 - **`.none`**  
   No extra padding; your views will hug the safe-area edges exactly.
 
@@ -145,13 +144,13 @@ CutoutAccessoryView(
 
 ---
 
-## **Advanced Usage**
+## **Overrides**
 
-<div align="left">
-  <img width="200" height="200" src="assets/notchError.png" alt="iPhone with notch showing incorrect spacing">
-  <h3><b>Custom Overrides for API Inaccuracies</b></h3>
-  <p>Some devices report incorrect notch dimensions through the API. Overrides correct the reported values to match actual device dimensions, ensuring consistent UI across all devices.</p>
-</div>
+![iPhone 16e close up of notch area showing 2 buttons, cancel and export pushing up agasint the dispaly border, misaligned with the notch space](assets/notchError.png)
+
+Some devices report incorrect notch dimensions through the API. Overrides correct the reported values to match actual device dimensions, ensuring consistent UI across all devices.
+
+NotchMyProblem has overrides by **default** already, devices like the iPhone 16e require this to correctly proportion elements, you do not need to figure these out for yourself, but you can create your own adjustments, or configure other devices 
 
 ### 1. Global Overrides (App-wide)
 
@@ -199,48 +198,15 @@ let customRect = NotchMyProblem.shared.adjustedExclusionRect(using: myOverrides)
 
 ---
 
-## **How It Works**
-
-1. Uses Objective-C runtime to safely fetch the exclusion area  
-2. Falls back gracefully if the API is unavailable  
-3. Applies device-specific scale/height overrides  
-4. Provides SwiftUI modifiers and environment overrides for fine-grained control  
-5. Includes logging (iOS 14+ `Logger`, iOS 13 `os_log`)  
-
----
-
-## **Compatibility**
-
-- iOS 13.0+  
-- All notched iPhones (X → 14, 16e…)  
-- Dynamic Island devices (14 Pro, newer)  
-- Fallback for devices without cutouts  
-
----
-
 ## **Logging**
 
 Filter Console with subsystem `com.notchmyproblem` to see debug/info/error logs.
 
 ---
 
-## **License**
-
-MIT — see [LICENSE.md](LICENSE.md)
-
-## **Contributing**
-
-Please review [CONTRIBUTING.md](CONTRIBUTING.md) before opening PRs.
-
-## **Support**
-
-If you like it, please give a ⭐️
-
----
-
 # Acknowledgments
 
-- Inspired by [TopNotch](https://github.com/samhenrigold/TopNotch)  
+- [TopNotch](https://github.com/samhenrigold/TopNotch)  
 - Uses private APIs safely—use at your own risk
 
 ---
