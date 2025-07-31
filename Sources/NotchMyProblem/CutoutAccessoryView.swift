@@ -96,7 +96,7 @@ public struct CutoutAccessoryView<LeadingContent: View, TrailingContent: View>: 
             let statusBarHeight = geometry.safeAreaInsets.top
             let hasTopCutout = statusBarHeight > 40
             
-            let exclusionWidth = getAdjustedExclusionRect()?.width ?? geometry.size.width * 0.5
+            let exclusionWidth = getAdjustedExclusionRect()?.width ?? geometry.size.width - 160
             
             let exclusionHeight = notchMyProblem.exclusionRect?.height ?? 0
 
