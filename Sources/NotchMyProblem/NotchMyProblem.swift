@@ -227,7 +227,8 @@ public final class NotchMyProblem: Sendable, ObservableObject {
     /// Global overrides that apply to all instances
     public static var globalOverrides: [DeviceOverride] = [
         .series(prefix: "iPhone13", scale: 0.95, heightFactor: 1.0, radius: 27), // iPhone 12 series
-        .series(prefix: "iPhone14", scale: 0.75, heightFactor: 0.75, radius: 24)  // iPhone 13/14 series
+        .series(prefix: "iPhone14", scale: 0.75, heightFactor: 0.75, radius: 24),  // iPhone 13/14 series
+        .series(prefix: "iPhone17,5", scale: 0.75, heightFactor: 0.75, radius: 24)  // iPhone 13/14 series
     ]
     
     /// Instance-specific overrides that only apply to this instance

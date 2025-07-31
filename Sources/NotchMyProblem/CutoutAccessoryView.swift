@@ -46,6 +46,9 @@ public enum CutoutAccessoryPadding {
     )
 }
 
+
+
+
 /// A view that positions content around the physical topology of the device's top area,
 /// adapting to notches, Dynamic Islands, and other screen cutouts automatically.
 ///
@@ -93,21 +96,24 @@ public struct CutoutAccessoryView<LeadingContent: View, TrailingContent: View>: 
             let statusBarHeight = geometry.safeAreaInsets.top
             let hasTopCutout = statusBarHeight > 40
             
-            let exclusionWidth = getAdjustedExclusionRect()?.width ?? geometry.size.width * 0.4
+            let exclusionWidth = getAdjustedExclusionRect()?.width ?? geometry.size.width * 0.5
             
             let exclusionHeight = notchMyProblem.exclusionRect?.height ?? 0
 
             let (cutoutPadding, contentPadding, verticalPadding): (CGFloat, CGFloat, CGFloat) = {
                 switch padding {
                 case .auto:
-                    return (exclusionWidth / 6, exclusionWidth / (3), exclusionHeight * 0.1)
+                    let cutoutPadding = max(5, min(20, 45 - (exclusionWidth * 0.18)))
+                    let contentPadding = max(2, min(40, 85 - (exclusionWidth * 0.35)))
+                    let verticalPadding = exclusionHeight * 0.1
+                    return (cutoutPadding, contentPadding, verticalPadding)
                 case .none:
                     return (0, 0, 0)
                 case .custom(let cutout, let content, let vertical):
                     return (cutout(exclusionWidth), content(exclusionWidth), vertical(exclusionHeight))
                 }
             }()
-            
+
             HStack(spacing: 0) {
                 // Leading content, aligned appropriately
                 leadingContent
@@ -126,7 +132,18 @@ public struct CutoutAccessoryView<LeadingContent: View, TrailingContent: View>: 
             }
             .padding(.vertical, verticalPadding)
             .frame(height: hasTopCutout ? notchMyProblem.exclusionRect?.height ?? statusBarHeight : 30)
-            .padding(.top, notchMyProblem.exclusionRect?.minY ?? (hasTopCutout ? 0 : 5))
+            .padding(.top, {
+                let minY = notchMyProblem.exclusionRect?.minY ?? (hasTopCutout ? 0 : 5)
+                
+                if minY == 0 {
+                    // Notched device - cutout touches bezel, need spacing
+                    return hasTopCutout ? (exclusionHeight / 3) : 5
+                } else {
+                    // Island device - cutout floats, align to its Y position
+                    return minY
+                }
+            }())
+
             .padding(.horizontal, hasTopCutout ? contentPadding : 5)
             .edgesIgnoringSafeArea(.all)
         }
@@ -276,5 +293,43 @@ public struct CutoutAccessoryView<LeadingContent: View, TrailingContent: View>: 
             }
         )
         .notchOverride(.series(prefix: "iPhone14", scale: 0.6, heightFactor: 0.6))
+    }
+}
+
+
+
+#Preview("Photos Example (iOS 26)") {
+    ZStack {
+        if #available(iOS 26.0, *) {
+            Color.clear
+                .background(
+                    Color.white.mix(with: .gray, by: 0.04).mix(with: .blue, by: 0.07)
+                )
+                .ignoresSafeArea()
+            CutoutAccessoryView(
+                padding: .auto,
+                leadingContent: {
+                    Button{
+                        
+                    } label: {
+                        Text("Discard")
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            .font(.footnote.weight(.semibold))
+                    }
+                    .buttonStyle(.glass)
+                },
+                trailingContent: {
+                    Button{
+                        
+                    } label: {
+                        Text("Export")
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            .font(.footnote.weight(.semibold))
+                    }
+                    .buttonStyle(.glassProminent)
+                    .tint(.blue.mix(with: .green, by: 0.4))
+                }
+            )
+        }
     }
 }

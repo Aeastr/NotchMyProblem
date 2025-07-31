@@ -123,7 +123,10 @@ CutoutAccessoryView(
 ### Available Modes
 
 - **`.auto`**  
-  Applies recommended defaults based on the actual cutout size
+  Uses intelligent curves that adapt to cutout size. **Smaller cutouts get more padding, larger cutouts get less padding** - the opposite of simple percentage-based approaches. This ensures optimal spacing across all device types:
+  - Dynamic Island (narrow): Gets generous padding for breathing room
+  - iPhone notch (wide): Gets minimal padding since the cutout already creates natural spacing
+  - Uses inverse relationship: `padding = base - (cutoutWidth × slope)` with min/max bounds
 
 - **`.none`**  
   No extra padding; your views will hug the safe-area edges exactly.
