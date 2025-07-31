@@ -92,14 +92,15 @@ public struct CutoutAccessoryView<LeadingContent: View, TrailingContent: View>: 
     
     public var body: some View {
         GeometryReader { geometry in
-            // Detect device topology based on safe area height
+            // MARK: - Device Detection
             let statusBarHeight = geometry.safeAreaInsets.top
             let hasTopCutout = statusBarHeight > 40
             
-            let exclusionWidth = getAdjustedExclusionRect()?.width ?? geometry.size.width - 160
-            
+            // MARK: - Cutout Dimensions
+            let exclusionWidth = getAdjustedExclusionRect()?.width ?? (geometry.size.width - 160) // Fallback for non-cutout devices (iPad, iPhone SE)
             let exclusionHeight = notchMyProblem.exclusionRect?.height ?? 0
-
+            
+            // MARK: - Padding Calculations
             let (cutoutPadding, contentPadding, verticalPadding): (CGFloat, CGFloat, CGFloat) = {
                 switch padding {
                 case .auto:
@@ -113,26 +114,9 @@ public struct CutoutAccessoryView<LeadingContent: View, TrailingContent: View>: 
                     return (cutout(exclusionWidth), content(exclusionWidth), vertical(exclusionHeight))
                 }
             }()
-
-            HStack(spacing: 0) {
-                // Leading content, aligned appropriately
-                leadingContent
-                    .frame(maxWidth: .infinity, alignment: hasTopCutout ? .center : .leading)
-                
-                // Space for the device's top cutout if present
-                if exclusionWidth > 0 {
-                    Color.clear
-                        .frame(width: exclusionWidth)
-                        .padding(.horizontal, cutoutPadding)
-                }
-                
-                // Trailing content, aligned appropriately
-                trailingContent
-                    .frame(maxWidth: .infinity, alignment: hasTopCutout ? .center : .trailing)
-            }
-            .padding(.vertical, verticalPadding)
-            .frame(height: hasTopCutout ? notchMyProblem.exclusionRect?.height ?? statusBarHeight : 30)
-            .padding(.top, {
+            
+            // MARK: - Top Positioning
+            let topPadding: CGFloat = {
                 let minY = notchMyProblem.exclusionRect?.minY ?? (hasTopCutout ? 0 : 5)
                 
                 if minY == 0 {
@@ -142,8 +126,28 @@ public struct CutoutAccessoryView<LeadingContent: View, TrailingContent: View>: 
                     // Island device - cutout floats, align to its Y position
                     return minY
                 }
-            }())
+            }()
 
+            // MARK: - Layout
+            HStack(spacing: 0) {
+                // Leading content
+                leadingContent
+                    .frame(maxWidth: .infinity, alignment: hasTopCutout ? .center : .leading)
+                
+                // Space for the device's top cutout
+                if exclusionWidth > 0 {
+                    Color.clear
+                        .frame(width: exclusionWidth)
+                        .padding(.horizontal, cutoutPadding)
+                }
+                
+                // Trailing content
+                trailingContent
+                    .frame(maxWidth: .infinity, alignment: hasTopCutout ? .center : .trailing)
+            }
+            .padding(.vertical, verticalPadding)
+            .frame(height: hasTopCutout ? notchMyProblem.exclusionRect?.height ?? statusBarHeight : 30)
+            .padding(.top, topPadding)
             .padding(.horizontal, hasTopCutout ? contentPadding : 5)
             .edgesIgnoringSafeArea(.all)
         }
