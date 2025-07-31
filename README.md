@@ -1,5 +1,5 @@
 <div align="center">
-  <img width="300" height="300" src="/assets/icon.png" alt="Logo">
+  <img width="270" height="270" src="/assets/icon.png" alt="Logo">
   <h1><b>NotchMyProblem</b></h1>
   <p>Swift package that handles the annoying task of positioning UI elements around the iPhone's notch and Dynamic Island<br>
 </div>
