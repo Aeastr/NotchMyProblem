@@ -1,7 +1,7 @@
 <div align="center">
   <img width="270" height="270" src="/assets/icon.png" alt="Logo">
   <h1><b>NotchMyProblem</b></h1>
-  <p>Swift package that handles the annoying task of positioning UI elements around the iPhone's notch and Dynamic Island<br>
+  <p>Swift package that handles the annoying task of positioning UI elements around the iPhone's notch or Dynamic Island, (aka the device ears!)<br>
 </div>
 
 <div align="center">
