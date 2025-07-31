@@ -325,7 +325,8 @@ public struct CutoutAccessoryView<LeadingContent: View, TrailingContent: View>: 
 }
 
 extension View{
-    // pls ignore shody code i have to make this display on iOS 14 too 💔
+    // pls ignore shody code i have to make this display on iOS 13 too 💔
+    // i will make better examples later (like ones seen online)
     func notchMyProblem_Example_Button(highlighted: Bool = false) -> some View{
         self
             .fixedSize(horizontal: true, vertical: false)
