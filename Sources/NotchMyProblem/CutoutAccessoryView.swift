@@ -97,7 +97,7 @@ public struct CutoutAccessoryView<LeadingContent: View, TrailingContent: View>: 
             let hasTopCutout = statusBarHeight > 40
             
             // MARK: - Cutout Dimensions
-            let exclusionWidth = getAdjustedExclusionRect()?.width ?? (geometry.size.width - 160) // Fallback for non-cutout devices (iPad, iPhone SE)
+            let exclusionWidth = getAdjustedExclusionRect()?.width ?? (geometry.size.width - 180) // Fallback for non-cutout devices (iPad, iPhone SE)
             let exclusionHeight = notchMyProblem.exclusionRect?.height ?? 0
             
             // MARK: - Padding Calculations
@@ -172,7 +172,7 @@ public struct CutoutAccessoryView<LeadingContent: View, TrailingContent: View>: 
         NavigationView {
             ScrollView {
                 VStack(alignment: .leading) {
-                    Text("Recommended for most cases. Adds horizontal padding to both the cutout area and the overall content, and vertical padding based on the cutout height. Ensures content doesn't touch the notch, device corners, or crowd the top edge.")
+                    Text("Recommended for most cases. Uses intelligent adaptive padding that gives smaller cutouts (Dynamic Island) more breathing room and larger cutouts (notches) less padding. Automatically handles positioning differences between notched and island devices.")
                         .font(.subheadline)
                         .padding(.horizontal)
                 }
@@ -297,43 +297,5 @@ public struct CutoutAccessoryView<LeadingContent: View, TrailingContent: View>: 
             }
         )
         .notchOverride(.series(prefix: "iPhone14", scale: 0.6, heightFactor: 0.6))
-    }
-}
-
-
-
-#Preview("Photos Example (iOS 26)") {
-    ZStack {
-        if #available(iOS 26.0, *) {
-            Color.clear
-                .background(
-                    Color.white.mix(with: .gray, by: 0.04).mix(with: .blue, by: 0.07)
-                )
-                .ignoresSafeArea()
-            CutoutAccessoryView(
-                padding: .auto,
-                leadingContent: {
-                    Button{
-                        
-                    } label: {
-                        Text("Discard")
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
-                            .font(.footnote.weight(.semibold))
-                    }
-                    .buttonStyle(.glass)
-                },
-                trailingContent: {
-                    Button{
-                        
-                    } label: {
-                        Text("Export")
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
-                            .font(.footnote.weight(.semibold))
-                    }
-                    .buttonStyle(.glassProminent)
-                    .tint(.blue.mix(with: .green, by: 0.4))
-                }
-            )
-        }
     }
 }
