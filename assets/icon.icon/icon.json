@@ -1,0 +1,92 @@
+{
+  "fill" : {
+    "linear-gradient" : [
+      "display-p3:0.14760,0.83678,1.00000,1.00000",
+      "extended-srgb:0.00000,0.53333,1.00000,1.00000"
+    ]
+  },
+  "groups" : [
+    {
+      "blur-material" : null,
+      "hidden" : false,
+      "layers" : [
+        {
+          "glass" : false,
+          "hidden" : false,
+          "image-name" : "Camera.png",
+          "name" : "Camera",
+          "position" : {
+            "scale" : 0.7,
+            "translation-in-points" : [
+              194.41956001620994,
+              -323.46080684985725
+            ]
+          }
+        },
+        {
+          "image-name" : "Frame 33.png",
+          "name" : "Frame 33",
+          "position" : {
+            "scale" : 0.7,
+            "translation-in-points" : [
+              0,
+              -326.6
+            ]
+          }
+        }
+      ],
+      "opacity" : 1,
+      "position" : {
+        "scale" : 0.985,
+        "translation-in-points" : [
+          0,
+          1
+        ]
+      },
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      },
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.5
+      }
+    },
+    {
+      "blur-material" : null,
+      "hidden" : false,
+      "layers" : [
+        {
+          "fill" : {
+            "solid" : "extended-gray:1.00000,1.00000"
+          },
+          "image-name" : "grid.png",
+          "name" : "Grid",
+          "opacity" : 0.5,
+          "position" : {
+            "scale" : 0.5,
+            "translation-in-points" : [
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "shadow" : {
+        "kind" : "none",
+        "opacity" : 0.5
+      },
+      "specular" : false,
+      "translucency" : {
+        "enabled" : false,
+        "value" : 0.5
+      }
+    }
+  ],
+  "supported-platforms" : {
+    "circles" : [
+      "watchOS"
+    ],
+    "squares" : "shared"
+  }
+}
