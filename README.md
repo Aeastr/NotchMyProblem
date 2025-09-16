@@ -48,6 +48,15 @@ dependencies: [
 
 NotchMyProblem automatically detects the device type and adjusts the UI accordingly, ensuring your buttons are perfectly positioned regardless of the device model.
 
+### Testing
+
+| Model | Dynamic Island | Tested |
+|-------|---------------|--------|
+| iPhone 17 | ✅ | ✅ |
+| iPhone 17 Pro | ✅ | ✅ |
+| iPhone 17 Pro Max | ✅ | ✅ |
+| iPhone 17 Air | ✅ | ✅ |
+
 ---
 
 ## **Basic Usage**
