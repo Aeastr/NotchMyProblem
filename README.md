@@ -43,7 +43,7 @@ dependencies: [
 |:-----------------------------:|:-----------------------------:|:-----------------------------:|
 | **Notch Devices**             | **Dynamic Island Devices**    | **Standard Devices**          |
 | Automatically positions buttons around the notch | Adapts to the Dynamic Island's dimensions | Falls back to standard positioning |
-| Works with iPhone X → iPhone 14/Plus, iPhone 16e | Supports iPhone 14 Pro → iPhone 17 series | Home button iPhones, iPads, and Mac apps (no cutout) |
+| Works with iPhone X → iPhone 14/Plus, iPhone 16e | Supports iPhone 14 Pro, iPhone 17 series, iPhone Air | Home button iPhones, iPads, and Mac apps (no cutout) |
 | Applies device-specific adjustments | Uses precise measurements | Maintains consistent UI across all devices |
 
 NotchMyProblem automatically detects the device type and adjusts the UI accordingly, ensuring your buttons are perfectly positioned regardless of the device model.
@@ -55,7 +55,7 @@ NotchMyProblem automatically detects the device type and adjusts the UI accordin
 | iPhone 17 | ✅ | ✅ |
 | iPhone 17 Pro | ✅ | ✅ |
 | iPhone 17 Pro Max | ✅ | ✅ |
-| iPhone 17 Air | ✅ | ✅ |
+| iPhone Air | ✅ | ✅ |
 
 ---
 
