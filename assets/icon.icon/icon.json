@@ -1,13 +1,10 @@
 {
   "fill" : {
-    "linear-gradient" : [
-      "display-p3:0.14760,0.83678,1.00000,1.00000",
-      "extended-srgb:0.00000,0.53333,1.00000,1.00000"
-    ]
+    "automatic-gradient" : "srgb:0.19608,0.57255,0.97255,1.00000"
   },
   "groups" : [
     {
-      "blur-material" : null,
+      "blur-material" : 0.18,
       "hidden" : false,
       "layers" : [
         {
@@ -15,6 +12,7 @@
           "hidden" : false,
           "image-name" : "Camera.png",
           "name" : "Camera",
+          "opacity" : 1,
           "position" : {
             "scale" : 0.7,
             "translation-in-points" : [
@@ -40,7 +38,7 @@
         "scale" : 0.985,
         "translation-in-points" : [
           0,
-          1
+          14
         ]
       },
       "shadow" : {
@@ -53,18 +51,18 @@
       }
     },
     {
-      "blur-material" : null,
+      "blur-material" : 0.5,
       "hidden" : false,
       "layers" : [
         {
           "fill" : {
             "solid" : "extended-gray:1.00000,1.00000"
           },
-          "image-name" : "grid.png",
+          "image-name" : "Grid.png",
           "name" : "Grid",
-          "opacity" : 0.5,
+          "opacity" : 0.2,
           "position" : {
-            "scale" : 0.5,
+            "scale" : 1,
             "translation-in-points" : [
               0,
               0
