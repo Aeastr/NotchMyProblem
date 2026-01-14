@@ -1,10 +1,10 @@
 {
   "fill" : {
-    "automatic-gradient" : "srgb:0.19608,0.57255,0.97255,1.00000"
+    "automatic-gradient" : "display-p3:0.58250,0.25534,0.94341,1.00000"
   },
   "groups" : [
     {
-      "blur-material" : 0.18,
+      "blur-material" : 0.15,
       "hidden" : false,
       "layers" : [
         {
@@ -42,12 +42,12 @@
         ]
       },
       "shadow" : {
-        "kind" : "neutral",
-        "opacity" : 0.5
+        "kind" : "layer-color",
+        "opacity" : 0.3
       },
       "translucency" : {
         "enabled" : true,
-        "value" : 0.5
+        "value" : 0.3
       }
     },
     {
