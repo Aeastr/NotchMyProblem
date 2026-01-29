@@ -33,3 +33,6 @@ Package.resolved
 *.swp
 *.lock
 *.moved-aside
+
+# macOS folder icon
+Icon?
